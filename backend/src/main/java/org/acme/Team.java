@@ -34,6 +34,10 @@ public class Team {
 
     public Team(String name) {
         this.name = name;
+        this.wins = 0;
+        this.losses = 0;
+        this.points_scored = 0;
+        this.points_allowed = 0;
     }
 
     public void setId(Long id) {

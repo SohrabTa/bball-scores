@@ -7,7 +7,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
-@Path("/teams")
+@Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TeamResource {
@@ -15,23 +15,24 @@ public class TeamResource {
     @Inject
     TeamRepository teamRepository;
 
+    @Path("/get_teams")
     @GET
     public List<Team> list() {
         return teamRepository.list();
     }
 
-    @Path("/add")
+    @Path("/add_team")
     @POST
     @Transactional
     public void addTeam(Team team) {
         teamRepository.addTeam(team);
     }
 
-    @Path("/delete")
+    @Path("/delete_team")
     @POST
     @Transactional
-    public void deleteTeam(Team team) {
-        teamRepository.deleteTeam(team);
+    public void deleteTeam(Long team_id) {
+        teamRepository.deleteTeam(team_id);
     }
 
 }

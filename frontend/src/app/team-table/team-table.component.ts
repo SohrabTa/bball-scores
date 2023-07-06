@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from '../team-service.service';
 
-export interface TeamEntity {
+export interface Team {
   id: number;
   name: string;
   wins: number;
@@ -17,8 +17,8 @@ export interface TeamEntity {
 })
 
 export class TeamTableComponent implements OnInit {
-  teams: TeamEntity[] = [];
-  newTeam: Partial<TeamEntity> = {}; // Partial type for the new team form
+  teams: Team[] = [];
+  newTeam: Partial<Team> = {}; // Partial type for the new team form
 
   constructor(private teamService: TeamService) {}
 
@@ -27,73 +27,58 @@ export class TeamTableComponent implements OnInit {
   }
 
   fetchTeams() {
-    this.teamService.getTeams().subscribe(
-      (teams: TeamEntity[]) => {
+    this.teamService.getTeams().subscribe({
+      next: (teams: Team[]) => {
+        console.log(teams)
         this.teams = teams;
-        this.sortTeams();
       },
-      error => {
+      error: (error: any) => {
         console.error('Failed to fetch teams:', error);
       }
-    );
-  }
-  
-
-  sortTeams() {
-    this.teams.sort((a, b) => {
-      // Sort by wins (descending)
-      if (a.wins > b.wins) {
-        return -1;
-      }
-      if (a.wins < b.wins) {
-        return 1;
-      }
-
-      // Sort by losses (ascending)
-      if (a.losses < b.losses) {
-        return -1;
-      }
-      if (a.losses > b.losses) {
-        return 1;
-      }
-
-      // Sort by difference of points (scored - allowed) (descending)
-      const aDifference = a.points_scored - a.points_allowed;
-      const bDifference = b.points_scored - b.points_allowed;
-      if (aDifference > bDifference) {
-        return -1;
-      }
-      if (aDifference < bDifference) {
-        return 1;
-      }
-
-      return 0;
     });
   }
 
   addTeam() {
-    if (this.newTeam.name && this.newTeam.wins && this.newTeam.losses && this.newTeam.points_scored && this.newTeam.points_allowed) {
-      this.teamService.addTeam(this.newTeam).subscribe(
-        (team: TeamEntity) => {
+    if (!this.newTeam.name) {
+      confirm('Team name cannot be empty!')
+      return
+    }
+    if (!this.newTeam.wins) {
+      this.newTeam.wins = 0;
+    }
+    if (!this.newTeam.losses) {
+      this.newTeam.losses = 0;
+    }
+    if (!this.newTeam.points_scored) {
+      this.newTeam.points_scored = 0;
+    }
+    if (!this.newTeam.points_allowed) {
+      this.newTeam.points_allowed = 0;
+    }
+    if (this.newTeam.name) {
+      console.log("new team: " + this.newTeam)
+      this.teamService.addTeam(this.newTeam).subscribe({
+        next: (team: Team) => {
           this.teams.push(team);
-          this.sortTeams();
           this.newTeam = {}; // Reset the form
+          this.fetchTeams();
         },
-        error => {
+        error: (error: any) => {
           console.error('Failed to add team:', error);
         }
-      );
+      });
+      
     }
   }
 
-  deleteTeam(team: TeamEntity) {
-    this.teamService.deleteTeam(team.id).subscribe(
-      () => {
+  deleteTeam(team: Team) {
+    this.teamService.deleteTeam(team.id).subscribe({
+      next: () => {
         this.teams = this.teams.filter(t => t !== team);
       },
-      error => {
+      error: (error: any) => {
         console.error('Failed to delete team:', error);
       }
-    );
+    });
   }
 }

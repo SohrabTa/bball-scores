@@ -13,8 +13,11 @@ public class TeamRepository implements PanacheRepository<Team> {
         persist(team);
     }
 
-    public void deleteTeam(Team team) {
-        delete(team);
+    public void deleteTeam(Long team_id) {
+        Team team = findById(team_id);
+        if (team != null) {
+            delete(team);
+        }
     }
 
     public List<Team> list() {
