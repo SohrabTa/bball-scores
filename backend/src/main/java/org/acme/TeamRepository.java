@@ -9,6 +9,16 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TeamRepository implements PanacheRepository<Team> {
 
+    public Team findTeamByName(String name) {
+        for (Team team : listAll()) {
+            if (team.getName().equals(name)) {
+                return team;
+            }
+        }
+
+        return null;
+    }
+
     public void addTeam(Team team) {
         persist(team);
     }
