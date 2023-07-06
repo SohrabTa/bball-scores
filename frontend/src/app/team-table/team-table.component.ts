@@ -8,6 +8,7 @@ export interface Team {
   losses: number;
   pointsScored: number;
   pointsAllowed: number;
+  editMode: boolean;
 }
 
 @Component({
@@ -30,6 +31,7 @@ export class TeamTableComponent implements OnInit {
     this.teamService.getTeams().subscribe({
       next: (teams: Team[]) => {
         this.teams = teams;
+        this.sortTeams();
       },
       error: (error: any) => {
         console.error('Failed to fetch teams:', error);
@@ -73,9 +75,47 @@ export class TeamTableComponent implements OnInit {
     this.teamService.deleteTeam(team.id).subscribe({
       next: () => {
         this.teams = this.teams.filter(t => t !== team);
+        this.sortTeams();
       },
       error: (error: any) => {
         console.error('Failed to delete team:', error);
+      }
+    });
+  }
+
+  sortTeams() {
+    this.teams.sort((a, b) => {
+      // Sort by wins in descending order
+      if (a.wins > b.wins) return -1;
+      if (a.wins < b.wins) return 1;
+      
+      // Sort by losses in ascending order
+      if (a.losses < b.losses) return -1;
+      if (a.losses > b.losses) return 1;
+      
+      // Sort by point differential in descending order
+      const diffA = a.pointsScored - a.pointsAllowed;
+      const diffB = b.pointsScored - b.pointsAllowed;
+      if (diffA > diffB) return -1;
+      if (diffA < diffB) return 1;
+      
+      // If all sorting criteria are equal, maintain the original order
+      return 0;
+    });
+  }
+
+  toggleEditMode(team: Team) {
+    team.editMode = !team.editMode;
+  }
+
+  saveChanges(team: Team) {
+    this.teamService.updateTeam(team).subscribe({
+      next: (updatedTeam: Team) => {
+        team.editMode = false;
+        this.sortTeams();
+      },
+      error : (error: any) => {
+        console.error('Failed to save changes:', error);
       }
     });
   }

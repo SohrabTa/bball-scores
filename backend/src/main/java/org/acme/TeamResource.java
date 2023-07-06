@@ -36,4 +36,20 @@ public class TeamResource {
         teamRepository.deleteTeam(team_id);
     }
 
+    @Path("/update_team")
+    @POST
+    @Transactional
+    public Team updateTeam(Team team) {
+        Team existingTeam = teamRepository.findById(team.getId());
+        if (existingTeam != null) {
+            existingTeam.setName(team.getName());
+            existingTeam.setWins(team.getWins());
+            existingTeam.setLosses(team.getLosses());
+            existingTeam.setPointsScored(team.getPointsScored());
+            existingTeam.setPointsAllowed(team.getPointsAllowed());
+            return existingTeam;
+        }
+        throw new NotFoundException("Team not found");
+    }
+
 }

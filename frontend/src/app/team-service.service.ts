@@ -25,4 +25,9 @@ export class TeamService {
     const url = `${this.apiUrl}/delete_team`;
     return this.http.post<Team>(url, teamId);
   }
+
+  updateTeam(team: Partial<Team>): Observable<Team> {
+    const url = `${this.apiUrl}/update_team`;
+    return this.http.post<Team>(url, team);
+  }
 }

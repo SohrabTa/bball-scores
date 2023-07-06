@@ -5,23 +5,29 @@
         <th>Name</th>
         <th>Wins</th>
         <th>Losses</th>
+        <th>Points Scored</th>
+        <th>Points Allowed</th>
         <th>Point Differential</th>
         <th></th> <!-- Add an empty column for the delete button -->
       </tr>
     </thead>
     <!-- Table body -->
     <tbody>
-      <!-- Loop over teams -->
       <tr *ngFor="let team of teams">
-        <td>{{ team.name }}</td>
-        <td>{{ team.wins }}</td>
-        <td>{{ team.losses }}</td>
+        <td><input type="text" [(ngModel)]="team.name" [disabled]="!team.editMode"></td>
+        <td><input type="number" [(ngModel)]="team.wins" [disabled]="!team.editMode"></td>
+        <td><input type="number" [(ngModel)]="team.losses" [disabled]="!team.editMode"></td>
+        <td><input type="number" [(ngModel)]="team.pointsScored" [disabled]="!team.editMode"></td>
+        <td><input type="number" [(ngModel)]="team.pointsAllowed" [disabled]="!team.editMode"></td>
         <td>{{ team.pointsScored - team.pointsAllowed }}</td>
         <td>
+          <button (click)="toggleEditMode(team)" [disabled]="team.editMode">Edit</button>
+          <button (click)="saveChanges(team)" [disabled]="!team.editMode">Save</button>
           <button (click)="deleteTeam(team)">Delete</button>
         </td>
       </tr>
     </tbody>
+    
   </table>
   
   <!-- Add team form -->
