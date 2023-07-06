@@ -3,7 +3,7 @@ package org.acme;
 import java.util.List;
 
 import jakarta.inject.Inject;
-
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -16,14 +16,22 @@ public class TeamResource {
     TeamRepository teamRepository;
 
     @GET
-    public List<TeamEntity> list() {
+    public List<Team> list() {
         return teamRepository.list();
     }
 
-    @GET
-    @Path("/{id}")
-    public TeamEntity get(String name) {
-        return teamRepository.findByName(name);
+    @Path("/add")
+    @POST
+    @Transactional
+    public void addTeam(Team team) {
+        teamRepository.addTeam(team);
+    }
+
+    @Path("/delete")
+    @POST
+    @Transactional
+    public void deleteTeam(Team team) {
+        teamRepository.deleteTeam(team);
     }
 
 }

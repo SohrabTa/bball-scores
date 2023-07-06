@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "Team")
 @Table(name = "teams")
-public class TeamEntity {
+public class Team {
 
     // attributes
 
@@ -28,11 +28,11 @@ public class TeamEntity {
     @Column(name = "team_points_allowed")
     private int points_allowed;
 
-    public TeamEntity() {
+    public Team() {
 
     }
 
-    public TeamEntity(String name) {
+    public Team(String name) {
         this.name = name;
     }
 

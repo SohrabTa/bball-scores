@@ -7,21 +7,17 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class TeamRepository implements PanacheRepository<TeamEntity> {
+public class TeamRepository implements PanacheRepository<Team> {
 
-    public TeamEntity findByName(String name) {
-        return find("name", name).firstResult();
-    }
-
-    public void addTeam(TeamEntity team) {
+    public void addTeam(Team team) {
         persist(team);
     }
 
-    public void deleteTeam(TeamEntity team) {
-        delete("team", team);
+    public void deleteTeam(Team team) {
+        delete(team);
     }
 
-    public List<TeamEntity> list() {
+    public List<Team> list() {
         return listAll();
     }
     

@@ -1,0 +1,41 @@
+<table>
+    <!-- Table header -->
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Wins</th>
+        <th>Losses</th>
+        <th>Points Scored</th>
+        <th>Points Allowed</th>
+        <th></th> <!-- Add an empty column for the delete button -->
+      </tr>
+    </thead>
+    <!-- Table body -->
+    <tbody>
+      <!-- Loop over teams -->
+      <tr *ngFor="let team of teams">
+        <td>{{ team.name }}</td>
+        <td>{{ team.wins }}</td>
+        <td>{{ team.losses }}</td>
+        <td>{{ team.points_scored }}</td>
+        <td>{{ team.points_allowed }}</td>
+        <td>
+          <button (click)="deleteTeam(team)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- Add team form -->
+  <div>
+    <h3>Add Team</h3>
+    <form (submit)="addTeam()">
+      <input type="text" placeholder="Team Name" [(ngModel)]="newTeam.name" name="name" required>
+      <input type="number" placeholder="Wins" [(ngModel)]="newTeam.wins" name="wins" required>
+      <input type="number" placeholder="Losses" [(ngModel)]="newTeam.losses" name="losses" required>
+      <input type="number" placeholder="Points Scored" [(ngModel)]="newTeam.points_scored" name="points_scored" required>
+      <input type="number" placeholder="Points Allowed" [(ngModel)]="newTeam.points_allowed" name="points_allowed" required>      
+      <button type="submit">Add</button>
+    </form>
+  </div>
+  
