@@ -24,8 +24,9 @@ public class TeamResource {
     @Path("/add_team")
     @POST
     @Transactional
-    public void addTeam(Team team) {
+    public Team addTeam(Team team) {
         teamRepository.addTeam(team);
+        return team;
     }
 
     @Path("/delete_team")

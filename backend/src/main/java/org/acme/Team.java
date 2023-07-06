@@ -23,10 +23,10 @@ public class Team {
     private int losses;
 
     @Column(name = "team_points_scored")
-    private int points_scored;
+    private int pointsScored;
 
     @Column(name = "team_points_allowed")
-    private int points_allowed;
+    private int pointsAllowed;
 
     public Team() {
 
@@ -36,8 +36,8 @@ public class Team {
         this.name = name;
         this.wins = 0;
         this.losses = 0;
-        this.points_scored = 0;
-        this.points_allowed = 0;
+        this.pointsScored = 0;
+        this.pointsAllowed = 0;
     }
 
     public void setId(Long id) {
@@ -72,20 +72,20 @@ public class Team {
         return this.losses;
     }
 
-    public void setPointsScored(int points_scored) {
-        this.points_scored = points_scored;
+    public void setPointsScored(int pointsScored) {
+        this.pointsScored = pointsScored;
     }
 
     public int getPointsScored() {
-        return this.points_scored;
+        return this.pointsScored;
     }
 
-    public void setPointsAllowed(int points_allowed) {
-        this.points_allowed = points_allowed;
+    public void setPointsAllowed(int pointsAllowed) {
+        this.pointsAllowed = pointsAllowed;
     }
 
     public int getPointsAllowed() {
-        return this.points_allowed;
+        return this.pointsAllowed;
     }
 
 }

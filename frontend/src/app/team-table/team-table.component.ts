@@ -6,8 +6,8 @@ export interface Team {
   name: string;
   wins: number;
   losses: number;
-  points_scored: number;
-  points_allowed: number;
+  pointsScored: number;
+  pointsAllowed: number;
 }
 
 @Component({
@@ -29,7 +29,6 @@ export class TeamTableComponent implements OnInit {
   fetchTeams() {
     this.teamService.getTeams().subscribe({
       next: (teams: Team[]) => {
-        console.log(teams)
         this.teams = teams;
       },
       error: (error: any) => {
@@ -49,19 +48,18 @@ export class TeamTableComponent implements OnInit {
     if (!this.newTeam.losses) {
       this.newTeam.losses = 0;
     }
-    if (!this.newTeam.points_scored) {
-      this.newTeam.points_scored = 0;
+    if (!this.newTeam.pointsScored) {
+      this.newTeam.pointsScored = 0;
     }
-    if (!this.newTeam.points_allowed) {
-      this.newTeam.points_allowed = 0;
+    if (!this.newTeam.pointsAllowed) {
+      this.newTeam.pointsAllowed = 0;
     }
     if (this.newTeam.name) {
-      console.log("new team: " + this.newTeam)
       this.teamService.addTeam(this.newTeam).subscribe({
         next: (team: Team) => {
           this.teams.push(team);
           this.newTeam = {}; // Reset the form
-          this.fetchTeams();
+          //this.fetchTeams();
         },
         error: (error: any) => {
           console.error('Failed to add team:', error);
