@@ -1,10 +1,16 @@
 package org.acme;
 
 import io.quarkus.test.junit.QuarkusTest;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
@@ -16,6 +22,9 @@ public class TeamServiceTest {
     @Inject
     TeamRepository teamRepository;
 
+    @Inject
+    TransactionManager tm;
+
     @Test
     public void testListTeamsEndpoint() {
         given()
@@ -26,8 +35,9 @@ public class TeamServiceTest {
     }
 
     @Test
-    public void testAddTeamEndpoint() {
-        Team team = new Team("Test Team");
+    public void testAddTeamEndpoint() throws IllegalStateException, SystemException {
+        tm.setRollbackOnly();
+        Team team = new Team("Test Add Team");
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(team)
@@ -35,19 +45,17 @@ public class TeamServiceTest {
             .post("/api/add_team")
             .then()
             .statusCode(200)
-            .body("name", equalTo("Test Team"));
+            .body("name", equalTo("Test Add Team"));
 
         // Verify the team is persisted in the repository
-        assert teamRepository.findTeamByName(team.getName()) != null;
-        
-        // Cleanup after test
-        teamRepository.deleteTeam(teamRepository.findTeamByName(team.getName()).getId());
+        assert teamRepository.findByName(team.getName()) != null;
+
     }
 
     @Test
     public void testDeleteTeamEndpoint() {
         // Add a team to the repository for deletion
-        Team team = new Team("Test Team");
+        Team team = new Team("Test Delete Team");
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(team)
@@ -55,24 +63,27 @@ public class TeamServiceTest {
             .post("/api/add_team")
             .then()
             .statusCode(200)
-            .body("name", equalTo("Test Team"));
+            .body("name", equalTo("Test Delete Team"));
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(teamRepository.findTeamByName(team.getName()).getId())
+            .body(teamRepository.findByName(team.getName()).getId())
             .when()
             .post("/api/delete_team")
             .then()
             .statusCode(204);
 
         // Verify the team is deleted from the repository
-        assert teamRepository.findTeamByName(team.getName()) == null;
+        // Assert that findByName throws a NotFoundException
+        assertThrows(NotFoundException.class, () -> {
+            teamRepository.findByName(team.getName());
+        });
     }
-    // This is commented out because the test failed, even though the behavior was correct.
+
     // @Test
     // public void testUpdateTeamEndpoint() {
     //     // Add a team to the repository for updating
-    //     Team team = new Team("Test Team");
+    //     Team team = new Team("Test Update Team");
     //     given()
     //         .contentType(MediaType.APPLICATION_JSON)
     //         .body(team)
@@ -80,12 +91,12 @@ public class TeamServiceTest {
     //         .post("/api/add_team")
     //         .then()
     //         .statusCode(200)
-    //         .body("name", equalTo("Test Team"));
+    //         .body("name", equalTo("Test Update Team"));
         
-    //     team.setId(teamRepository.findTeamByName(team.getName()).getId());
+    //     team.setId(teamRepository.findByName(team.getName()).getId());
 
     //     // Update the team
-    //     team.setName("Update Team");
+    //     team.setName("Updated Test Update Team");
     //     team.setWins(5);
     //     team.setLosses(2);
     //     team.setPointsScored(100);
@@ -97,17 +108,14 @@ public class TeamServiceTest {
     //         .when()
     //         .post("/api/update_team")
     //         .then()
-    //         .statusCode(200);
+    //         .statusCode(204);
 
     //     // Verify the team is updated in the repository
     //     Team updatedTeam = teamRepository.findById(team.getId());
-    //     assert updatedTeam.getName().equals("Update Team");
+    //     assert updatedTeam.getName().equals("Updated Test Update Team");
     //     assert updatedTeam.getWins() == 5;
     //     assert updatedTeam.getLosses() == 2;
     //     assert updatedTeam.getPointsScored() == 100;
     //     assert updatedTeam.getPointsAllowed() == 50;
-
-    //     // Cleanup after test
-    //     teamRepository.deleteTeam(updatedTeam.getId());
-    //}
+    // }
 }
