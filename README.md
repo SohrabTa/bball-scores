@@ -1,11 +1,22 @@
-# Automatic Setup Script
-Start Docker Desktop
+# Start App
+Regardless of which method used to start the app, a docker deamon has to be running.
+Three options to start the app:
+1. [Docker Compose](#docker-compose)
+2. [Batch Script](#startup-batch-script)
+3. [Manual Setup](#manual-setup)
+## Docker Compose
+Start the application by running
+```
+docker compose up
+```
 
-Run ./startup.bat
-
-# Manual Setup
-Start Docker Desktop
-## Postgres DB
+## Startup Batch Script
+Start the application by running
+```
+./startup.bat
+```
+## Manual Setup
+### Postgres DB
 Get a postgres db in a docker container
 
 ```
@@ -15,7 +26,7 @@ Run the postgres docker container
 ```
 docker run -d -p  5433:5432 --name postgres-db -e POSTGRES_PASSWORD=password postgres
 ```
-## Quarkus Backend
+### Quarkus Backend
 Build the Quarkus backend docker image
 
 ```
@@ -28,7 +39,7 @@ Run the backend docker container
 docker run -d -p 8080:8080 backend
 ```
 
-## Angular frontend
+### Angular frontend
 Build the Angular frontend docker image
 ```
 cd ./frontend
