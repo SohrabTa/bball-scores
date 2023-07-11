@@ -1,4 +1,10 @@
-# Setup
+# Automatic Setup Script
+Start Docker Desktop
+
+Run ./startup.bat
+
+# Manual Setup
+Start Docker Desktop
 ## Postgres DB
 Get a postgres db in a docker container
 
