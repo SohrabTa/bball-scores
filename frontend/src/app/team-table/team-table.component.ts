@@ -61,7 +61,7 @@ export class TeamTableComponent implements OnInit {
         next: (team: Team) => {
           this.teams.push(team);
           this.newTeam = {}; // Reset the form
-          //this.fetchTeams();
+          this.fetchTeams();
         },
         error: (error: any) => {
           console.error('Failed to add team:', error);
@@ -75,7 +75,7 @@ export class TeamTableComponent implements OnInit {
     this.teamService.deleteTeam(team.id).subscribe({
       next: () => {
         this.teams = this.teams.filter(t => t !== team);
-        this.sortTeams();
+        this.fetchTeams();
       },
       error: (error: any) => {
         console.error('Failed to delete team:', error);

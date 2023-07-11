@@ -7,7 +7,7 @@ import { Team } from './team-table/team-table.component';
   providedIn: 'root'
 })
 export class TeamService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = 'http://host.docker.internal:8080/api';
 
   constructor(private http: HttpClient) {}
 
