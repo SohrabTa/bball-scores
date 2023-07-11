@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TeamService {
+public class TeamController {
 
     @Inject
     TeamRepository teamRepository;

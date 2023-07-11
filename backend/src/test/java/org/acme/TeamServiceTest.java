@@ -23,7 +23,8 @@ public class TeamServiceTest {
     TeamRepository teamRepository;
 
     @Inject
-    TransactionManager tm;
+    TransactionHelper transactionHelper;
+
 
     @Test
     public void testListTeamsEndpoint() {
@@ -36,7 +37,6 @@ public class TeamServiceTest {
 
     @Test
     public void testAddTeamEndpoint() throws IllegalStateException, SystemException {
-        tm.setRollbackOnly();
         Team team = new Team("Test Add Team");
         given()
             .contentType(MediaType.APPLICATION_JSON)
@@ -80,42 +80,42 @@ public class TeamServiceTest {
         });
     }
 
-    // @Test
-    // public void testUpdateTeamEndpoint() {
-    //     // Add a team to the repository for updating
-    //     Team team = new Team("Test Update Team");
-    //     given()
-    //         .contentType(MediaType.APPLICATION_JSON)
-    //         .body(team)
-    //         .when()
-    //         .post("/api/add_team")
-    //         .then()
-    //         .statusCode(200)
-    //         .body("name", equalTo("Test Update Team"));
+    @Test
+    public void testUpdateTeamEndpoint() {
+        // Add a team to the repository for updating
+        Team team = new Team("Test Update Team");
+        given()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(team)
+            .when()
+            .post("/api/add_team")
+            .then()
+            .statusCode(200)
+            .body("name", equalTo("Test Update Team"));
         
-    //     team.setId(teamRepository.findByName(team.getName()).getId());
+        team.setId(teamRepository.findByName(team.getName()).getId());
 
-    //     // Update the team
-    //     team.setName("Updated Test Update Team");
-    //     team.setWins(5);
-    //     team.setLosses(2);
-    //     team.setPointsScored(100);
-    //     team.setPointsAllowed(50);
+        // Update the team
+        team.setName("Updated Test Update Team");
+        team.setWins(5);
+        team.setLosses(2);
+        team.setPointsScored(100);
+        team.setPointsAllowed(50);
 
-    //     given()
-    //         .contentType(MediaType.APPLICATION_JSON)
-    //         .body(team)
-    //         .when()
-    //         .post("/api/update_team")
-    //         .then()
-    //         .statusCode(204);
+        given()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(team)
+            .when()
+            .post("/api/update_team")
+            .then()
+            .statusCode(204);
 
-    //     // Verify the team is updated in the repository
-    //     Team updatedTeam = teamRepository.findById(team.getId());
-    //     assert updatedTeam.getName().equals("Updated Test Update Team");
-    //     assert updatedTeam.getWins() == 5;
-    //     assert updatedTeam.getLosses() == 2;
-    //     assert updatedTeam.getPointsScored() == 100;
-    //     assert updatedTeam.getPointsAllowed() == 50;
-    // }
+        // Verify the team is updated in the repository
+        Team updatedTeam = transactionHelper.withNewTransaction(() -> teamRepository.findById(team.getId()));
+        assert updatedTeam.getName().equals("Updated Test Update Team");
+        assert updatedTeam.getWins() == 5;
+        assert updatedTeam.getLosses() == 2;
+        assert updatedTeam.getPointsScored() == 100;
+        assert updatedTeam.getPointsAllowed() == 50;
+    }
 }

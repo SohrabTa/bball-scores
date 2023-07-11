@@ -40,7 +40,7 @@ public class TeamRepository implements PanacheRepository<Team> {
         return listAll();
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void update(Team team) {
         Team existingTeam = findById(team.getId());
         if (existingTeam != null) {
