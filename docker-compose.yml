@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+  postgres-db:
+    image: "postgres:latest"
+    container_name: postgres-db
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./src/main/docker/Dockerfile.jvm
+    container_name: quarkus-backend
+    ports:
+      - 8080:8080
+    links:
+      - postgres-db
+
+  frontend:
+    build: ./frontend
+    container_name: angular-frontend
+    ports:
+      - 4200:4200
+    links:
+      - backend
