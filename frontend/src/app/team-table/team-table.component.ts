@@ -85,13 +85,6 @@ export class TeamTableComponent implements OnInit {
 
   sortTeams() {
     this.teams.sort((a, b) => {
-      // Sort by wins in descending order
-      if (a.wins > b.wins) return -1;
-      if (a.wins < b.wins) return 1;
-      
-      // Sort by losses in ascending order
-      if (a.losses < b.losses) return -1;
-      if (a.losses > b.losses) return 1;
       
       // Sort by point differential in descending order
       const diffA = a.pointsScored - a.pointsAllowed;
@@ -112,7 +105,7 @@ export class TeamTableComponent implements OnInit {
     this.teamService.updateTeam(team).subscribe({
       next: (updatedTeam: Team) => {
         team.editMode = false;
-        this.sortTeams();
+        this.fetchTeams();
       },
       error : (error: any) => {
         console.error('Failed to save changes:', error);

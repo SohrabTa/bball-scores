@@ -30,15 +30,13 @@ public class Team {
     @Column(name = "team_points_allowed")
     private int pointsAllowed;
 
-    public Team() {
-
-    }
-
-    public Team(String name) {
-        this.name = name;
-        this.wins = 0;
-        this.losses = 0;
-        this.pointsScored = 0;
-        this.pointsAllowed = 0;
+    public static Team createTeamByName (String name) {
+        Team team = new Team();
+        team.name = name;
+        team.wins = 0;
+        team.losses = 0;
+        team.pointsScored = 0;
+        team.pointsAllowed = 0;
+        return team;
     }
 }

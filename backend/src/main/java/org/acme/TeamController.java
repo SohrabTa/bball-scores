@@ -14,27 +14,27 @@ public class TeamController {
     @Inject
     TeamRepository teamRepository;
 
-    @Path("/get_teams")
+    @Path("/teams")
     @GET
     public List<Team> list() {
         return teamRepository.list();
     }
 
-    @Path("/add_team")
+    @Path("/team")
     @POST
     public Team addTeam(Team team) {
         teamRepository.add(team);
         return team;
     }
 
-    @Path("/delete_team")
-    @POST
-    public void deleteTeam(Long team_id) {
+    @Path("/team/{id}")
+    @DELETE
+    public void deleteTeam(@PathParam("id") Long team_id) {
         teamRepository.delete(team_id);
     }
 
-    @Path("/update_team")
-    @POST
+    @Path("/team")
+    @PUT
     public void updateTeam(Team team) {
         teamRepository.update(team);
     }
