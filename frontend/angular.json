@@ -74,7 +74,8 @@
               "browserTarget": "frontend:build:development"
             },
             "docker" : {
-              "browserTarget": "frontend:build:docker"
+              "browserTarget": "frontend:build:docker",
+              "host": "0.0.0.0"
             }
           },
           "defaultConfiguration": "development"
