@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.SystemException;
-import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
