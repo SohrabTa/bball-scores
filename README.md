@@ -50,4 +50,4 @@ Run the frontend docker container
 docker run -d -p 4200:4200 frontend
 ```
 
-Open webserver at `http://localhost:4200` in your browser
+Navigate to `http://localhost:4200/` using your browser to open the app.
