@@ -2,12 +2,14 @@ package org.acme;
 
 import jakarta.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity(name = "Team")
 @Table(name = "teams")
+@Getter
+@Setter
 public class Team {
-
-    // attributes
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
@@ -28,64 +30,13 @@ public class Team {
     @Column(name = "team_points_allowed")
     private int pointsAllowed;
 
-    public Team() {
-
+    public static Team createTeamByName (String name) {
+        Team team = new Team();
+        team.name = name;
+        team.wins = 0;
+        team.losses = 0;
+        team.pointsScored = 0;
+        team.pointsAllowed = 0;
+        return team;
     }
-
-    public Team(String name) {
-        this.name = name;
-        this.wins = 0;
-        this.losses = 0;
-        this.pointsScored = 0;
-        this.pointsAllowed = 0;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setWins(int wins) {
-        this.wins = wins;
-    }
-
-    public int getWins() {
-        return this.wins;
-    }
-
-    public void setLosses(int losses) {
-        this.losses = losses;
-    }
-
-    public int getLosses() {
-        return this.losses;
-    }
-
-    public void setPointsScored(int pointsScored) {
-        this.pointsScored = pointsScored;
-    }
-
-    public int getPointsScored() {
-        return this.pointsScored;
-    }
-
-    public void setPointsAllowed(int pointsAllowed) {
-        this.pointsAllowed = pointsAllowed;
-    }
-
-    public int getPointsAllowed() {
-        return this.pointsAllowed;
-    }
-
 }

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.SystemException;
-import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
@@ -30,19 +29,19 @@ public class TeamServiceTest {
     public void testListTeamsEndpoint() {
         given()
             .when()
-            .get("/api/get_teams")
+            .get("/api/teams")
             .then()
             .statusCode(200);
     }
 
     @Test
     public void testAddTeamEndpoint() throws IllegalStateException, SystemException {
-        Team team = new Team("Test Add Team");
+        Team team = Team.createTeamByName("Test Add Team");
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(team)
             .when()
-            .post("/api/add_team")
+            .post("/api/team")
             .then()
             .statusCode(200)
             .body("name", equalTo("Test Add Team"));
@@ -55,12 +54,12 @@ public class TeamServiceTest {
     @Test
     public void testDeleteTeamEndpoint() {
         // Add a team to the repository for deletion
-        Team team = new Team("Test Delete Team");
+        Team team = Team.createTeamByName("Test Delete Team");
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(team)
             .when()
-            .post("/api/add_team")
+            .post("/api/team")
             .then()
             .statusCode(200)
             .body("name", equalTo("Test Delete Team"));
@@ -69,7 +68,7 @@ public class TeamServiceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(teamRepository.findByName(team.getName()).getId())
             .when()
-            .post("/api/delete_team")
+            .post("/api/team")
             .then()
             .statusCode(204);
 
@@ -83,12 +82,12 @@ public class TeamServiceTest {
     @Test
     public void testUpdateTeamEndpoint() {
         // Add a team to the repository for updating
-        Team team = new Team("Test Update Team");
+        Team team = Team.createTeamByName("Test Update Team");
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(team)
             .when()
-            .post("/api/add_team")
+            .post("/api/team")
             .then()
             .statusCode(200)
             .body("name", equalTo("Test Update Team"));
@@ -106,7 +105,7 @@ public class TeamServiceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(team)
             .when()
-            .post("/api/update_team")
+            .post("/api/team")
             .then()
             .statusCode(204);
 

@@ -22,6 +22,8 @@ dependencies {
     implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+	annotationProcessor 'org.projectlombok:lombok:1.18.28'
 }
 
 group 'org.acme'
