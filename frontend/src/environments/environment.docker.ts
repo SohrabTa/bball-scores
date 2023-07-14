@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://host.docker.internal:8080/api',
+    apiUrl: 'http://localhost:8080/api',
   };
