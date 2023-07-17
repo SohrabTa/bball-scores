@@ -85,14 +85,6 @@ export class TeamTableComponent implements OnInit {
 
   sortTeams() {
     this.teams.sort((a, b) => {
-      // Sort by wins in descending order
-      if (a.wins > b.wins) return -1;
-      if (a.wins < b.wins) return 1;
-      
-      // Sort by losses in ascending order
-      if (a.losses < b.losses) return -1;
-      if (a.losses > b.losses) return 1;
-      
       // Sort by point differential in descending order
       const diffA = a.pointsScored - a.pointsAllowed;
       const diffB = b.pointsScored - b.pointsAllowed;
