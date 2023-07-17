@@ -1,45 +1,29 @@
-<table>
-    <!-- Table header -->
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Wins</th>
-        <th>Losses</th>
-        <th>Points Scored</th>
-        <th>Points Allowed</th>
-        <th>Point Differential</th>
-        <th></th> <!-- Add an empty column for the delete button -->
-      </tr>
-    </thead>
-    <!-- Table body -->
-    <tbody>
-      <tr *ngFor="let team of teams">
-        <td><input type="text" [(ngModel)]="team.name" [disabled]="!team.editMode"></td>
-        <td><input type="number" [(ngModel)]="team.wins" [disabled]="!team.editMode"></td>
-        <td><input type="number" [(ngModel)]="team.losses" [disabled]="!team.editMode"></td>
-        <td><input type="number" [(ngModel)]="team.pointsScored" [disabled]="!team.editMode"></td>
-        <td><input type="number" [(ngModel)]="team.pointsAllowed" [disabled]="!team.editMode"></td>
-        <td>{{ team.pointsScored - team.pointsAllowed }}</td>
-        <td>
+<!-- Add team form -->
+<div>
+<button mat-button (click)="openAddTeamDialog()">Add New Team</button>
+</div>
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Table columns -->
+  <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+    <mat-header-cell *matHeaderCellDef>{{ column }}</mat-header-cell>
+    <mat-cell *matCellDef="let team">
+      <ng-container [ngSwitch]="column">
+        <input type="text" *ngSwitchCase="'name'" [(ngModel)]="team.name" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'wins'" [(ngModel)]="team.wins" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'losses'" [(ngModel)]="team.losses" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'pointsScored'" [(ngModel)]="team.pointsScored" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'pointsAllowed'" [(ngModel)]="team.pointsAllowed" [disabled]="!team.editMode">
+        <span *ngSwitchCase="'pointDifferential'">{{ team.pointsScored - team.pointsAllowed }}</span>
+        <ng-container *ngSwitchCase="'actions'">
           <button (click)="toggleEditMode(team)" [disabled]="team.editMode">Edit</button>
           <button (click)="saveChanges(team)" [disabled]="!team.editMode">Save</button>
           <button (click)="deleteTeam(team)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-    
-  </table>
-  
-  <!-- Add team form -->
-  <div>
-    <h3>Add Team</h3>
-    <form (submit)="addTeam()">
-      <input type="text" placeholder="Team Name" [(ngModel)]="newTeam.name" name="name" required>
-      <input type="number" placeholder="Wins" [(ngModel)]="newTeam.wins" name="wins" required>
-      <input type="number" placeholder="Losses" [(ngModel)]="newTeam.losses" name="losses" required>
-      <input type="number" placeholder="Points Scored" [(ngModel)]="newTeam.pointsScored" name="points_scored" required>
-      <input type="number" placeholder="Points Allowed" [(ngModel)]="newTeam.pointsAllowed" name="points_allowed" required>      
-      <button type="submit">Add</button>
-    </form>
-  </div>
-  
+        </ng-container>
+      </ng-container>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let team; columns: displayedColumns;"></mat-row>
+</mat-table>

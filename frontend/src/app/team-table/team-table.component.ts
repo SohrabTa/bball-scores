@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from '../team-service.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 export interface Team {
   id: number;
@@ -18,20 +20,21 @@ export interface Team {
 })
 
 export class TeamTableComponent implements OnInit {
-  teams: Team[] = [];
+  dataSource!: MatTableDataSource<Team>;
   newTeam: Partial<Team> = {}; // Partial type for the new team form
+  displayedColumns: string[] = ['Name', 'Wins', 'Losses', 'Points Scored', 'Points Allowed', 'Point Differential', 'Actions'];
 
-  constructor(private teamService: TeamService) {}
+  constructor(private teamService: TeamService, private dialog: MatDialog) {}
 
   ngOnInit() {
+    this.dataSource = new MatTableDataSource<Team>();
     this.fetchTeams();
   }
 
   fetchTeams() {
     this.teamService.getTeams().subscribe({
       next: (teams: Team[]) => {
-        this.teams = teams;
-        this.sortTeams();
+        this.dataSource.data = teams;
       },
       error: (error: any) => {
         console.error('Failed to fetch teams:', error);
@@ -39,10 +42,26 @@ export class TeamTableComponent implements OnInit {
     });
   }
 
+  openAddTeamDialog() {
+    // const dialogRef: MatDialogRef<AddTeamDialogComponent> = this.dialog.open(AddTeamDialogComponent, {
+    //   width: '400px',
+    //   data: {} // Optional initial data for the dialog
+    // });
+  
+    // dialogRef.afterClosed().subscribe((newTeam: Team | undefined) => {
+    //   if (newTeam) {
+    //     this.teamService.addTeam(newTeam).subscribe((team: Team) => {
+    //       this.dataSource.data.push(team);
+    //       this.fetchTeams();
+    //     });
+    //   }
+    // });
+  }
+  
   addTeam() {
     if (!this.newTeam.name) {
       confirm('Team name cannot be empty!')
-      return
+      return;
     }
     if (!this.newTeam.wins) {
       this.newTeam.wins = 0;
@@ -59,7 +78,7 @@ export class TeamTableComponent implements OnInit {
     if (this.newTeam.name) {
       this.teamService.addTeam(this.newTeam).subscribe({
         next: (team: Team) => {
-          this.teams.push(team);
+          this.dataSource.data.push(team);
           this.newTeam = {}; // Reset the form
           this.fetchTeams();
         },
@@ -74,7 +93,7 @@ export class TeamTableComponent implements OnInit {
   deleteTeam(team: Team) {
     this.teamService.deleteTeam(team.id).subscribe({
       next: () => {
-        this.teams = this.teams.filter(t => t !== team);
+        this.dataSource.data = this.dataSource.data.filter(t => t !== team);
         this.fetchTeams();
       },
       error: (error: any) => {
@@ -84,7 +103,7 @@ export class TeamTableComponent implements OnInit {
   }
 
   sortTeams() {
-    this.teams.sort((a, b) => {
+    this.dataSource.data.sort((a, b) => {
       // Sort by point differential in descending order
       const diffA = a.pointsScored - a.pointsAllowed;
       const diffB = b.pointsScored - b.pointsAllowed;
