@@ -1,7 +1,8 @@
 <!-- Add team form -->
 <div>
-<button mat-button (click)="openAddTeamDialog()">Add New Team</button>
+  <button mat-button (click)="openAddTeamDialog()">Add New Team</button>
 </div>
+
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <!-- Table columns -->
@@ -9,13 +10,13 @@
     <mat-header-cell *matHeaderCellDef>{{ column }}</mat-header-cell>
     <mat-cell *matCellDef="let team">
       <ng-container [ngSwitch]="column">
-        <input type="text" *ngSwitchCase="'name'" [(ngModel)]="team.name" [disabled]="!team.editMode">
-        <input type="number" *ngSwitchCase="'wins'" [(ngModel)]="team.wins" [disabled]="!team.editMode">
-        <input type="number" *ngSwitchCase="'losses'" [(ngModel)]="team.losses" [disabled]="!team.editMode">
-        <input type="number" *ngSwitchCase="'pointsScored'" [(ngModel)]="team.pointsScored" [disabled]="!team.editMode">
-        <input type="number" *ngSwitchCase="'pointsAllowed'" [(ngModel)]="team.pointsAllowed" [disabled]="!team.editMode">
-        <span *ngSwitchCase="'pointDifferential'">{{ team.pointsScored - team.pointsAllowed }}</span>
-        <ng-container *ngSwitchCase="'actions'">
+        <input type="text" *ngSwitchCase="'Name'" [(ngModel)]="team.name" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'Wins'" [(ngModel)]="team.wins" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'Losses'" [(ngModel)]="team.losses" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'Points Scored'" [(ngModel)]="team.pointsScored" [disabled]="!team.editMode">
+        <input type="number" *ngSwitchCase="'Points Allowed'" [(ngModel)]="team.pointsAllowed" [disabled]="!team.editMode">
+        <span *ngSwitchCase="'Point Differential'">{{ team.pointsScored - team.pointsAllowed }}</span>
+        <ng-container *ngSwitchCase="'Actions'">
           <button (click)="toggleEditMode(team)" [disabled]="team.editMode">Edit</button>
           <button (click)="saveChanges(team)" [disabled]="!team.editMode">Save</button>
           <button (click)="deleteTeam(team)">Delete</button>

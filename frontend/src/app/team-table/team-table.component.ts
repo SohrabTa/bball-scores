@@ -34,6 +34,7 @@ export class TeamTableComponent implements OnInit {
   fetchTeams() {
     this.teamService.getTeams().subscribe({
       next: (teams: Team[]) => {
+        this.sortTeams();
         this.dataSource.data = teams;
       },
       error: (error: any) => {
@@ -79,7 +80,6 @@ export class TeamTableComponent implements OnInit {
       this.teamService.addTeam(this.newTeam).subscribe({
         next: (team: Team) => {
           this.dataSource.data.push(team);
-          this.newTeam = {}; // Reset the form
           this.fetchTeams();
         },
         error: (error: any) => {
