@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from '../team-service.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 
 export interface Team {
   id: number;
@@ -18,20 +22,22 @@ export interface Team {
 })
 
 export class TeamTableComponent implements OnInit {
-  teams: Team[] = [];
+  dataSource!: MatTableDataSource<Team>;
   newTeam: Partial<Team> = {}; // Partial type for the new team form
+  displayedColumns: string[] = ['Name', 'Wins', 'Losses', 'Points Scored', 'Points Allowed', 'Point Differential', 'Actions'];
 
-  constructor(private teamService: TeamService) {}
+  constructor(private teamService: TeamService, private dialog: MatDialog) {}
 
   ngOnInit() {
+    this.dataSource = new MatTableDataSource<Team>();
     this.fetchTeams();
   }
 
   fetchTeams() {
     this.teamService.getTeams().subscribe({
       next: (teams: Team[]) => {
-        this.teams = teams;
-        this.sortTeams();
+        this.sortTeams(teams);
+        this.dataSource = new MatTableDataSource<Team>(teams);
       },
       error: (error: any) => {
         console.error('Failed to fetch teams:', error);
@@ -39,42 +45,41 @@ export class TeamTableComponent implements OnInit {
     });
   }
 
-  addTeam() {
-    if (!this.newTeam.name) {
-      confirm('Team name cannot be empty!')
-      return
-    }
-    if (!this.newTeam.wins) {
-      this.newTeam.wins = 0;
-    }
-    if (!this.newTeam.losses) {
-      this.newTeam.losses = 0;
-    }
-    if (!this.newTeam.pointsScored) {
-      this.newTeam.pointsScored = 0;
-    }
-    if (!this.newTeam.pointsAllowed) {
-      this.newTeam.pointsAllowed = 0;
-    }
-    if (this.newTeam.name) {
-      this.teamService.addTeam(this.newTeam).subscribe({
-        next: (team: Team) => {
-          this.teams.push(team);
-          this.newTeam = {}; // Reset the form
-          this.fetchTeams();
-        },
-        error: (error: any) => {
-          console.error('Failed to add team:', error);
+  openAddTeamDialog() {
+    const dialogRef: MatDialogRef<AddTeamDialogComponent> = this.dialog.open(AddTeamDialogComponent, {
+      width: '400px'
+    });
+  
+    dialogRef.afterClosed().subscribe({
+      next: (newTeam: Team) => {
+        if (newTeam) {
+          this.teamService.addTeam(newTeam).subscribe((team: Team) => {
+            this.dataSource.data.push(team);
+            this.fetchTeams();
+          });
         }
-      });
-      
-    }
+      },
+      error: (error: any) => {
+        console.error('Failed to add team:', error);
+      }
+    })
+  }
+  
+  addTeam() {
+    this.teamService.addTeam(this.newTeam).subscribe({
+      next: (team: Team) => {
+        this.dataSource.data.push(team);
+        this.fetchTeams();
+      },
+      error: (error: any) => {
+        console.error('Failed to add team:', error);
+      }
+    })
   }
 
   deleteTeam(team: Team) {
     this.teamService.deleteTeam(team.id).subscribe({
       next: () => {
-        this.teams = this.teams.filter(t => t !== team);
         this.fetchTeams();
       },
       error: (error: any) => {
@@ -83,22 +88,20 @@ export class TeamTableComponent implements OnInit {
     });
   }
 
-  sortTeams() {
-    this.teams.sort((a, b) => {
-      // Sort by wins in descending order
-      if (a.wins > b.wins) return -1;
-      if (a.wins < b.wins) return 1;
-      
-      // Sort by losses in ascending order
-      if (a.losses < b.losses) return -1;
-      if (a.losses > b.losses) return 1;
-      
-      // Sort by point differential in descending order
-      const diffA = a.pointsScored - a.pointsAllowed;
-      const diffB = b.pointsScored - b.pointsAllowed;
-      if (diffA > diffB) return -1;
-      if (diffA < diffB) return 1;
-      
+  sortTeams(teams: Team[]) {
+    teams.sort((a, b) => {
+      // Point differential is only relevant when the wins and losses of the teams are the same
+      if (a.wins == b.wins && a.losses == b.losses) {
+        // Sort by point differential in descending order
+        const differentialA = a.pointsScored - a.pointsAllowed;
+        const differentialB = b.pointsScored - b.pointsAllowed;
+        if (differentialA > differentialB) {
+          return -1;
+        }  
+        else if (differentialA < differentialB) {
+          return 1;
+        }
+      }
       // If all sorting criteria are equal, maintain the original order
       return 0;
     });
@@ -112,7 +115,7 @@ export class TeamTableComponent implements OnInit {
     this.teamService.updateTeam(team).subscribe({
       next: (updatedTeam: Team) => {
         team.editMode = false;
-        this.sortTeams();
+        this.fetchTeams();
       },
       error : (error: any) => {
         console.error('Failed to save changes:', error);

@@ -1,0 +1,17 @@
+/* Add the following CSS rules to your component's CSS file or style block */
+
+/* Styling for the mat-toolbar */
+mat-toolbar {
+  background-color: #7C4DFF; /* Use your desired primary color here */
+  color: #fff; /* Text color for the toolbar */
+  height: 64px; /* Set the desired height of the toolbar */
+  display: flex;
+  justify-content: center; /* Center the text horizontally */
+  align-items: center; /* Center the text vertically */
+  font-size: 24px; /* Set the font size of the text */
+}
+
+/* Optional: Add a subtle box-shadow for depth */
+mat-toolbar {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

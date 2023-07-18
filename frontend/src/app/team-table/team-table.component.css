@@ -1,13 +1,15 @@
-table, th , td {
-  border: 1px solid grey;
-  border-collapse: collapse;
-  padding: 5px;
-}
-
-table tr:nth-child(odd) {
-  background-color: #f1f1f1;
-}
-
-table tr:nth-child(even) {
-  background-color: #ffffff;
-}
+/* Container for the button */
+.container {
+    display: flex;
+    justify-content: flex-end; /* Aligns the button to the right */
+    margin-bottom: 16px; /* Optional margin at the bottom of the button */
+    margin-right: 5px;
+  }
+  
+  button.mat-raised-button {
+    /* Add any custom styling you want for the button here */
+  
+    /* Optional padding to increase the size of the button */
+    padding: 8px 16px;
+  }
+  
