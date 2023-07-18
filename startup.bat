@@ -3,7 +3,7 @@
 REM Postgres DB
 echo Setting up Postgres DB...
 docker pull postgres
-docker run -d -p 5432:5432 --name postgres-db -e POSTGRES_PASSWORD=password postgres
+docker run -d -p 5433:5432 --name postgres-db -e POSTGRES_PASSWORD=password postgres
 
 REM Quarkus Backend
 echo Building Quarkus backend...

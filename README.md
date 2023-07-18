@@ -1,11 +1,20 @@
+# Basketball Table
+This app can be used to track the standings of a basketball league (or any other sport that does not have ties).
+
 # Start App
-Regardless of which method used to start the app, a docker deamon has to be running.
-Three options to start the app:
+Regardless of the method used to start the application, a Docker daemon must be running.
+There are three ways to start the application:
 1. [Docker Compose](#docker-compose)
 2. [Batch Script](#startup-batch-script)
 3. [Manual Setup](#manual-setup)
 ## Docker Compose
-Start the application by running
+Build the backend
+```
+cd ./backend
+./gradlew build
+```
+
+Start the application by navigation to the root folder and running
 ```
 docker compose up
 ```
@@ -24,7 +33,7 @@ docker pull postgres
 ```
 Run the postgres docker container
 ```
-docker run -d -p  5432:5432 --name postgres-db -e POSTGRES_PASSWORD=password postgres
+docker run -d -p  5433:5432 --name postgres-db -e POSTGRES_PASSWORD=password postgres
 ```
 ### Quarkus Backend
 Build the Quarkus backend docker image
