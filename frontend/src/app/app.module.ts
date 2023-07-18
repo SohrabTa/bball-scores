@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatToolbarModule } from '@angular/material/toolbar'; 
 
 import { TeamTableComponent } from './team-table/team-table.component';
 import { AddTeamDialogComponent } from './add-team-dialog/add-team-dialog.component';
@@ -30,6 +31,7 @@ import { AddTeamDialogComponent } from './add-team-dialog/add-team-dialog.compon
     MatTableModule,
     MatButtonModule,
     MatDialogModule,
+    MatToolbarModule,
     BrowserAnimationsModule
   ],
   providers: [],

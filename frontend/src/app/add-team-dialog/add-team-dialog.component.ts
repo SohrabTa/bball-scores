@@ -45,6 +45,18 @@ export class AddTeamDialogComponent {
       if (!this.addTeamForm.value.name) {
         confirm("Name cannot be empty.")
       }
+      else if (this.addTeamForm.value.wins < 0) {
+        confirm("Wins cannot be negative.")
+      }
+      else if (this.addTeamForm.value.losses < 0) {
+        confirm("Losses cannot be negative.")
+      }
+      else if (this.addTeamForm.value.pointsScored < 0) {
+        confirm("Points Scored cannot be negative.")
+      }
+      else if (this.addTeamForm.value.pointsAllowed < 0) {
+        confirm("Points Allowed cannot be negative.")
+      }
     }
   }
 }
