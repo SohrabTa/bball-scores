@@ -24,7 +24,7 @@ export class TeamTableComponent implements OnInit {
   newTeam: Partial<Team> = {}; // Partial type for the new team form
   displayedColumns: string[] = ['Name', 'Wins', 'Losses', 'Points Scored', 'Points Allowed', 'Point Differential', 'Actions'];
 
-  constructor(private teamService: TeamService, private dialog: MatDialog) {}
+  constructor(private teamService: TeamService) {}
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource<Team>();
@@ -34,8 +34,8 @@ export class TeamTableComponent implements OnInit {
   fetchTeams() {
     this.teamService.getTeams().subscribe({
       next: (teams: Team[]) => {
-        this.sortTeams();
-        this.dataSource.data = teams;
+        this.sortTeams(teams);
+        this.dataSource = new MatTableDataSource<Team>(teams);
       },
       error: (error: any) => {
         console.error('Failed to fetch teams:', error);
@@ -93,7 +93,6 @@ export class TeamTableComponent implements OnInit {
   deleteTeam(team: Team) {
     this.teamService.deleteTeam(team.id).subscribe({
       next: () => {
-        this.dataSource.data = this.dataSource.data.filter(t => t !== team);
         this.fetchTeams();
       },
       error: (error: any) => {
@@ -102,14 +101,20 @@ export class TeamTableComponent implements OnInit {
     });
   }
 
-  sortTeams() {
-    this.dataSource.data.sort((a, b) => {
-      // Sort by point differential in descending order
-      const diffA = a.pointsScored - a.pointsAllowed;
-      const diffB = b.pointsScored - b.pointsAllowed;
-      if (diffA > diffB) return -1;
-      if (diffA < diffB) return 1;
-      
+  sortTeams(teams: Team[]) {
+    teams.sort((a, b) => {
+      // Point differential is only relevant when the wins and losses of the teams are the same
+      if (a.wins == b.wins && a.losses == b.losses) {
+        // Sort by point differential in descending order
+        const differentialA = a.pointsScored - a.pointsAllowed;
+        const differentialB = b.pointsScored - b.pointsAllowed;
+        if (differentialA > differentialB) {
+          return -1;
+        }  
+        else if (differentialA < differentialB) {
+          return 1;
+        }
+      }
       // If all sorting criteria are equal, maintain the original order
       return 0;
     });
@@ -123,7 +128,7 @@ export class TeamTableComponent implements OnInit {
     this.teamService.updateTeam(team).subscribe({
       next: (updatedTeam: Team) => {
         team.editMode = false;
-        this.sortTeams();
+        this.fetchTeams();
       },
       error : (error: any) => {
         console.error('Failed to save changes:', error);
