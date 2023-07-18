@@ -47,8 +47,7 @@ export class TeamTableComponent implements OnInit {
 
   openAddTeamDialog() {
     const dialogRef: MatDialogRef<AddTeamDialogComponent> = this.dialog.open(AddTeamDialogComponent, {
-      width: '400px',
-      data: {} // Optional initial data for the dialog
+      width: '400px'
     });
   
     dialogRef.afterClosed().subscribe({
