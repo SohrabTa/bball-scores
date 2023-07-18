@@ -3,6 +3,8 @@ import { TeamService } from '../team-service.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
+
 export interface Team {
   id: number;
   name: string;
@@ -24,7 +26,7 @@ export class TeamTableComponent implements OnInit {
   newTeam: Partial<Team> = {}; // Partial type for the new team form
   displayedColumns: string[] = ['Name', 'Wins', 'Losses', 'Points Scored', 'Points Allowed', 'Point Differential', 'Actions'];
 
-  constructor(private teamService: TeamService) {}
+  constructor(private teamService: TeamService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource<Team>();
@@ -44,19 +46,19 @@ export class TeamTableComponent implements OnInit {
   }
 
   openAddTeamDialog() {
-    // const dialogRef: MatDialogRef<AddTeamDialogComponent> = this.dialog.open(AddTeamDialogComponent, {
-    //   width: '400px',
-    //   data: {} // Optional initial data for the dialog
-    // });
+    const dialogRef: MatDialogRef<AddTeamDialogComponent> = this.dialog.open(AddTeamDialogComponent, {
+      width: '400px',
+      data: {} // Optional initial data for the dialog
+    });
   
-    // dialogRef.afterClosed().subscribe((newTeam: Team | undefined) => {
-    //   if (newTeam) {
-    //     this.teamService.addTeam(newTeam).subscribe((team: Team) => {
-    //       this.dataSource.data.push(team);
-    //       this.fetchTeams();
-    //     });
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe((newTeam: Team | undefined) => {
+      if (newTeam) {
+        this.teamService.addTeam(newTeam).subscribe((team: Team) => {
+          this.dataSource.data.push(team);
+          this.fetchTeams();
+        });
+      }
+    });
   }
   
   addTeam() {
