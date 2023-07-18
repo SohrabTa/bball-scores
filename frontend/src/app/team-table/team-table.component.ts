@@ -51,45 +51,31 @@ export class TeamTableComponent implements OnInit {
       data: {} // Optional initial data for the dialog
     });
   
-    dialogRef.afterClosed().subscribe((newTeam: Team | undefined) => {
-      if (newTeam) {
-        this.teamService.addTeam(newTeam).subscribe((team: Team) => {
-          this.dataSource.data.push(team);
-          this.fetchTeams();
-        });
+    dialogRef.afterClosed().subscribe({
+      next: (newTeam: Team) => {
+        if (newTeam) {
+          this.teamService.addTeam(newTeam).subscribe((team: Team) => {
+            this.dataSource.data.push(team);
+            this.fetchTeams();
+          });
+        }
+      },
+      error: (error: any) => {
+        console.error('Failed to add team:', error);
       }
-    });
+    })
   }
   
   addTeam() {
-    if (!this.newTeam.name) {
-      confirm('Team name cannot be empty!')
-      return;
-    }
-    if (!this.newTeam.wins) {
-      this.newTeam.wins = 0;
-    }
-    if (!this.newTeam.losses) {
-      this.newTeam.losses = 0;
-    }
-    if (!this.newTeam.pointsScored) {
-      this.newTeam.pointsScored = 0;
-    }
-    if (!this.newTeam.pointsAllowed) {
-      this.newTeam.pointsAllowed = 0;
-    }
-    if (this.newTeam.name) {
-      this.teamService.addTeam(this.newTeam).subscribe({
-        next: (team: Team) => {
-          this.dataSource.data.push(team);
-          this.fetchTeams();
-        },
-        error: (error: any) => {
-          console.error('Failed to add team:', error);
-        }
-      });
-      
-    }
+    this.teamService.addTeam(this.newTeam).subscribe({
+      next: (team: Team) => {
+        this.dataSource.data.push(team);
+        this.fetchTeams();
+      },
+      error: (error: any) => {
+        console.error('Failed to add team:', error);
+      }
+    })
   }
 
   deleteTeam(team: Team) {
